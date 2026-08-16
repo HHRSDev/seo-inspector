@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SEO Inspector",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Inspect the current page's SEO elements: title, description, metadata, headings, and social tags.",
   "permissions": ["activeTab", "scripting", "storage", "sidePanel"],
   "host_permissions": ["http://*/*", "https://*/*"],
