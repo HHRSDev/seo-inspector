@@ -79,13 +79,29 @@
         </div>
         <span id="score" class="score-badge" hidden title="Overall SEO score"></span>
         <div class="header-actions">
+          <button id="history-btn" class="icon-btn" title="Recent analyses">&#x1F553;</button>
           <button id="copy" class="icon-btn" title="Copy report to clipboard">&#x2398;</button>
+          <div class="export-wrap">
+            <button id="export" class="icon-btn" title="Export report as a file">&#x2913;</button>
+            <div id="export-menu" class="menu" hidden>
+              <button data-fmt="md">Markdown (.md)</button>
+              <button data-fmt="csv">CSV (.csv)</button>
+              <button data-fmt="json">JSON (.json)</button>
+            </div>
+          </div>
           <button id="refresh" class="icon-btn" title="Re-analyze page">&#x21bb;</button>
         </div>
       </div>
       <span id="page-url" class="page-url" title=""></span>
     </header>
     <main id="report">
+      <div id="history-view" hidden>
+        <div class="history-head">
+          <span>Recent analyses</span>
+          <button id="history-clear" class="history-clear">Clear</button>
+        </div>
+        <ul id="history-list"></ul>
+      </div>
       <div id="loading" class="notice">Analyzing page&hellip;</div>
       <div id="error" class="notice error" hidden></div>
       <div id="results" hidden></div>
@@ -104,6 +120,10 @@
     window.chrome = {
       storage: {
         sync: {
+          get: async (defaults) => ({ ...defaults }),
+          set: async () => {},
+        },
+        local: {
           get: async (defaults) => ({ ...defaults }),
           set: async () => {},
         },

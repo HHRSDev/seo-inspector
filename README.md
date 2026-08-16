@@ -15,7 +15,11 @@ A Chrome/Edge browser extension that inspects the current page and reports on it
 - **Structured Data** — JSON-LD blocks (flags parse errors), per-entity validation of recommended properties for common schema.org types (Article, Product, LocalBusiness, FAQPage, Recipe, Event, and more), plus Microdata/RDFa detection
 - **Content** — word count (flags thin content under 300 words), keyword density (top single words and repeated two-word phrases, stopwords excluded), images missing alt text, internal/external link counts
 
-The copy button (⎘) in the header copies the full report as plain text to the clipboard.
+## Reporting & export
+
+- The copy button (⎘) copies the full report as plain text to the clipboard.
+- The export button (⤓) downloads the report as **Markdown**, **CSV**, or **JSON**, named `seo-report-<host>-<timestamp>.<ext>`.
+- The history button (🕓) shows the last analyses (up to 200 kept in `chrome.storage.local`) with score, counts, and timestamp per URL; rapid re-analyses of the same URL within a minute are collapsed into one entry. Clear wipes the list.
 
 An overall **0–100 score** appears in the header (passes count fully, warnings half, failures zero; green ≥80, amber ≥50, red below). Sections are collapsible — click a section title — and the collapsed state is remembered across sessions. After an analysis, the toolbar icon shows a per-tab **badge** with the issue count (red if any check failed, amber for warnings only).
 

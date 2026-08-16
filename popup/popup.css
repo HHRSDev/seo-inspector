@@ -234,7 +234,100 @@ section.collapsed .section-body {
 
 .header-actions {
   display: flex;
+  align-items: center;
   gap: 2px;
+}
+
+.export-wrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  min-width: 140px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 20;
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  padding: 7px 12px;
+  text-align: left;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: var(--surface);
+}
+
+#history-view {
+  padding: 8px 14px;
+}
+
+.history-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  padding-bottom: 6px;
+}
+
+.history-clear {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+#history-list {
+  list-style: none;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid var(--border);
+}
+
+.history-item .score-badge {
+  flex-shrink: 0;
+}
+
+.history-info {
+  min-width: 0;
+}
+
+.history-url {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-meta {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.history-empty {
+  color: var(--text-muted);
+  padding: 12px 0;
 }
 
 .check-value {

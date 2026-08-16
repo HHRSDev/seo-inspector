@@ -339,12 +339,15 @@ function checkRow({ label, value, status = STATUS.INFO, meta, metaJudged = false
   }
   const metaPart = meta ? ` (${meta})` : "";
   row._reportLine = `${STATUS_SYMBOL[status]} ${label}${metaPart}: ${text}`;
+  row._reportRow = { label, status, meta: meta || "", text };
   return row;
 }
 
-// Accumulated during render; consumed by the copy-report button.
+// Accumulated during render; consumed by the copy and export buttons.
 let reportText = "";
 let reportLines = [];
+let reportRows = [];
+let reportMeta = null;
 
 // Section collapsed/expanded state, persisted across sessions.
 let collapsedSections = new Set();
@@ -376,6 +379,7 @@ function section(title, rows) {
   rows.forEach((r) => {
     body.appendChild(r);
     if (r._reportLine) reportLines.push(r._reportLine);
+    if (r._reportRow) reportRows.push({ section: title, ...r._reportRow });
   });
   sec.appendChild(body);
   return sec;
@@ -547,6 +551,7 @@ function render(data) {
   const results = document.getElementById("results");
   results.textContent = "";
   reportLines = [];
+  reportRows = [];
 
   const urlNode = document.getElementById("page-url");
   urlNode.textContent = data.url;
@@ -1035,7 +1040,106 @@ function render(data) {
   document.getElementById("loading").hidden = true;
   results.hidden = false;
 
-  return { passCount, warnCount, failCount };
+  reportMeta = { url: data.url, ts: Date.now(), score };
+  return { passCount, warnCount, failCount, score };
+}
+
+// ---- History ----
+
+function scoreClass(score) {
+  return score >= 80 ? "score-good" : score >= 50 ? "score-ok" : "score-poor";
+}
+
+async function saveToHistory(entry) {
+  const { history } = await chrome.storage.local.get({ history: [] });
+  // Sidebar mode re-analyzes constantly while browsing — collapse rapid
+  // repeat analyses of the same URL into one entry.
+  if (history[0] && history[0].url === entry.url && entry.ts - history[0].ts < 60000) {
+    history[0] = entry;
+  } else {
+    history.unshift(entry);
+  }
+  await chrome.storage.local.set({ history: history.slice(0, 200) });
+}
+
+async function showHistory() {
+  const { history } = await chrome.storage.local.get({ history: [] });
+  const list = document.getElementById("history-list");
+  list.textContent = "";
+  if (history.length === 0) {
+    list.appendChild(el("li", "history-empty", "No saved analyses yet."));
+  }
+  history.slice(0, 50).forEach((h) => {
+    const li = el("li", "history-item");
+    li.title = h.url;
+    li.appendChild(el("span", `score-badge ${scoreClass(h.score)}`, String(h.score)));
+    const info = el("div", "history-info");
+    let short = h.url.replace(/^https?:\/\//, "");
+    if (short.length > 52) short = `${short.slice(0, 52)}…`;
+    info.appendChild(el("div", "history-url", short));
+    info.appendChild(
+      el(
+        "div",
+        "history-meta",
+        `${new Date(h.ts).toLocaleString()} · ${h.pass} passed · ${h.warn} warnings · ${h.fail} failed`
+      )
+    );
+    li.appendChild(info);
+    list.appendChild(li);
+  });
+}
+
+async function toggleHistory() {
+  const view = document.getElementById("history-view");
+  const show = view.hidden;
+  if (show) await showHistory();
+  view.hidden = !show;
+  document.getElementById("results").hidden = show;
+}
+
+// ---- Export ----
+
+function downloadReport(fmt) {
+  if (!reportMeta) return;
+  let host = "page";
+  try {
+    host = new URL(reportMeta.url).hostname || "page";
+  } catch {
+    /* keep default */
+  }
+  const stamp = new Date(reportMeta.ts).toISOString().slice(0, 16).replace(/[:T]/g, "-");
+  let content;
+  let mime;
+  if (fmt === "csv") {
+    const esc = (s) => `"${String(s ?? "").replace(/"/g, '""')}"`;
+    content = [
+      "Section,Check,Status,Result,Details",
+      ...reportRows.map((r) =>
+        [r.section, r.label, r.status.toUpperCase(), r.meta, r.text].map(esc).join(",")
+      ),
+    ].join("\r\n");
+    mime = "text/csv";
+  } else if (fmt === "json") {
+    content = JSON.stringify(
+      {
+        url: reportMeta.url,
+        generated: new Date(reportMeta.ts).toISOString(),
+        score: reportMeta.score,
+        checks: reportRows,
+      },
+      null,
+      2
+    );
+    mime = "application/json";
+  } else {
+    content = reportText;
+    mime = "text/markdown";
+  }
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([content], { type: mime }));
+  a.download = `seo-report-${host}-${stamp}.${fmt}`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function showError(message) {
@@ -1049,6 +1153,7 @@ function showError(message) {
 
 async function analyze() {
   document.getElementById("error").hidden = true;
+  document.getElementById("history-view").hidden = true;
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab) {
     showError("No active tab found.");
@@ -1076,6 +1181,18 @@ async function analyze() {
       }
     } catch {
       /* badge is cosmetic — ignore failures */
+    }
+    try {
+      await saveToHistory({
+        url: result.url,
+        ts: Date.now(),
+        score: counts.score,
+        pass: counts.passCount,
+        warn: counts.warnCount,
+        fail: counts.failCount,
+      });
+    } catch {
+      /* history is best-effort */
     }
   } catch (err) {
     showError(`Couldn't analyze this page: ${err.message}`);
@@ -1121,6 +1238,28 @@ async function setupModeSwitch() {
 }
 
 document.getElementById("refresh").addEventListener("click", analyze);
+
+document.getElementById("history-btn").addEventListener("click", toggleHistory);
+
+document.getElementById("history-clear").addEventListener("click", async () => {
+  await chrome.storage.local.set({ history: [] });
+  showHistory();
+});
+
+const exportMenu = document.getElementById("export-menu");
+document.getElementById("export").addEventListener("click", (e) => {
+  e.stopPropagation();
+  exportMenu.hidden = !exportMenu.hidden;
+});
+exportMenu.querySelectorAll("button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    exportMenu.hidden = true;
+    downloadReport(btn.dataset.fmt);
+  });
+});
+document.addEventListener("click", () => {
+  exportMenu.hidden = true;
+});
 
 document.getElementById("copy").addEventListener("click", async () => {
   if (!reportText) return;
