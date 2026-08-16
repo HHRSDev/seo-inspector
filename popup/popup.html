@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SEO Inspector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <h1>SEO Inspector</h1>
+      <span id="score" class="score-badge" hidden title="Overall SEO score"></span>
+      <div class="header-actions">
+        <button id="copy" class="icon-btn" title="Copy report to clipboard">&#x2398;</button>
+        <button id="refresh" class="icon-btn" title="Re-analyze page">&#x21bb;</button>
+      </div>
+    </div>
+    <span id="page-url" class="page-url" title=""></span>
+  </header>
+
+  <main id="report">
+    <div id="loading" class="notice">Analyzing page&hellip;</div>
+    <div id="error" class="notice error" hidden></div>
+    <div id="results" hidden></div>
+  </main>
+
+  <footer>
+    <span id="summary"></span>
+    <div class="mode-switch" id="mode-switch" title="Where the toolbar button opens SEO Inspector">
+      <button data-mode="popup">Popup</button>
+      <button data-mode="sidebar">Sidebar</button>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

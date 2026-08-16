@@ -1,0 +1,7 @@
+# Local Claude Code settings
+.claude/settings.local.json
+
+# Packaged extension artifacts
+*.zip
+*.crx
+*.pem
