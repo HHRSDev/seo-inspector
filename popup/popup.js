@@ -1032,10 +1032,10 @@ function render(data) {
     ...reportLines,
   ].join("\n");
 
-  return { passCount, warnCount, failCount };
-
   document.getElementById("loading").hidden = true;
   results.hidden = false;
+
+  return { passCount, warnCount, failCount };
 }
 
 function showError(message) {

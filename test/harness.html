@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Title: 44 chars -> PASS -->
+  <title>Ham Radio Repeater Guide for Houston Texas</title>
+  <!-- Description: ~125 chars -> PASS -->
+  <meta name="description" content="A complete guide to ham radio repeaters in the Houston area, including frequencies, offsets, tones, and coverage maps.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- No canonical -> WARN. -->
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR4nGNgYPj/n4GBgYEBAAr0Av4uD0DIAAAAAElFTkSuQmCC">
+  <!-- No apple-touch-icon -> missing placeholder card -->
+
+  <!-- Open Graph: complete but tiny 2x2 image -> "too small" FAIL -->
+  <meta property="og:title" content="Ham Radio Repeater Guide">
+  <meta property="og:description" content="Houston-area repeater frequencies and coverage.">
+  <meta property="og:image" content="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR4nGNgYPj/n4GBgYEBAAr0Av4uD0DIAAAAAElFTkSuQmCC">
+  <meta property="og:type" content="article">
+  <!-- Twitter: partial (no image -> falls back to og:image) -->
+  <meta name="twitter:card" content="summary">
+
+  <!-- Hreflang: invalid code, duplicate en, relative URL, no self-ref, no x-default -->
+  <link rel="alternate" hreflang="en" href="https://example.com/en/">
+  <link rel="alternate" hreflang="en" href="https://example.com/en-us/">
+  <link rel="alternate" hreflang="not_a_valid_code!" href="https://example.com/xx/">
+  <link rel="alternate" hreflang="es" href="/es/">
+
+  <!-- JSON-LD: Article missing datePublished/author -> WARN -->
+  <script type="application/ld+json">
+    {"@context": "https://schema.org", "@type": "Article", "headline": "Repeater Guide", "image": "https://example.com/img.jpg"}
+  </script>
+  <!-- Broken JSON-LD block -> parse error FAIL -->
+  <script type="application/ld+json">{"@type": "Product", broken</script>
+
+  <link rel="stylesheet" href="../popup/popup.css">
+  <style>
+    /* Neutralize popup.css body sizing for the harness page */
+    body { width: auto; max-height: none; display: block; font-size: 14px; padding: 16px; }
+    #popup-shell {
+      width: 420px; border: 2px solid #888; border-radius: 8px; overflow: hidden;
+      position: fixed; top: 12px; right: 12px; max-height: 90vh;
+      display: flex; flex-direction: column; background: var(--bg);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    #popup-shell main { overflow-y: auto; }
+    .test-content { max-width: 560px; }
+  </style>
+</head>
+<body>
+  <!-- ===== Simulated page content ===== -->
+  <div class="test-content">
+    <h1>Houston Ham Radio Repeater Guide</h1> <!-- shares words with title -> PASS -->
+    <h2>VHF Repeaters</h2>
+    <h2>UHF Repeaters</h2>
+    <p>Ham radio repeaters extend the range of handheld and mobile radios across the Houston
+    metro area. Each repeater listing in this guide includes the output frequency, the offset,
+    and the access tone needed to key the repeater. Most repeaters in the Houston area operate
+    on the two meter band or the seventy centimeter band.</p>
+    <p>Repeater coverage depends on antenna height, transmit power, and terrain. The repeater
+    listings below are grouped by band and sorted by frequency so you can quickly program your
+    radio. Always identify with your callsign when using any repeater.</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR4nGNgYPj/n4GBgYEBAAr0Av4uD0DIAAAAAElFTkSuQmCC" alt="Repeater tower diagram">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR4nGNgYPj/n4GBgYEBAAr0Av4uD0DIAAAAAElFTkSuQmCC"> <!-- missing alt -> WARN -->
+    <div itemscope itemtype="https://schema.org/Organization"><span itemprop="name">HHRS</span></div>
+    <a href="https://example.com/other">External link</a>
+    <a href="http://insecure.example.com/">Insecure link</a> <!-- http link -> WARN -->
+    <a href="/local/page">Internal link</a>
+  </div>
+
+  <!-- ===== Embedded popup UI (same markup as popup.html) ===== -->
+  <div id="popup-shell">
+    <header>
+      <div class="header-top">
+        <h1>SEO Inspector</h1>
+        <span id="score" class="score-badge" hidden title="Overall SEO score"></span>
+        <div class="header-actions">
+          <button id="copy" class="icon-btn" title="Copy report to clipboard">&#x2398;</button>
+          <button id="refresh" class="icon-btn" title="Re-analyze page">&#x21bb;</button>
+        </div>
+      </div>
+      <span id="page-url" class="page-url" title=""></span>
+    </header>
+    <main id="report">
+      <div id="loading" class="notice">Analyzing page&hellip;</div>
+      <div id="error" class="notice error" hidden></div>
+      <div id="results" hidden></div>
+    </main>
+    <footer>
+      <span id="summary"></span>
+      <div class="mode-switch" id="mode-switch">
+        <button data-mode="popup">Popup</button>
+        <button data-mode="sidebar">Sidebar</button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Stub the chrome extension APIs so the real popup.js runs against this page.
+    window.chrome = {
+      storage: {
+        sync: {
+          get: async (defaults) => ({ ...defaults }),
+          set: async () => {},
+        },
+        onChanged: { addListener() {} },
+      },
+      tabs: {
+        // Fake an https tab URL so analyze()'s gate passes; the collector
+        // itself reports the real location.href.
+        query: async () => [{ id: 1, url: "https://test.local/harness" }],
+        onActivated: { addListener() {} },
+        onUpdated: { addListener() {} },
+      },
+      scripting: {
+        executeScript: async ({ func }) => [{ result: await func() }],
+      },
+      action: {
+        setBadgeText: async (o) => console.log("badge:", JSON.stringify(o)),
+        setBadgeBackgroundColor: async () => {},
+      },
+      windows: { getCurrent: async () => ({ id: 1 }) },
+      sidePanel: { open: async () => {}, setPanelBehavior: async () => {} },
+    };
+  </script>
+  <script src="../popup/popup.js"></script>
+</body>
+</html>
