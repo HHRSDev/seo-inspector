@@ -2,6 +2,10 @@
 
 _Last updated: August 2026_
 
+> The canonical version of this policy is published at
+> **https://n5kwd.com/legal/seo-inspector-privacy** — that URL is the one
+> referenced in the Chrome Web Store and Edge Add-ons listings.
+
 SEO Inspector analyzes the web page in your active browser tab and displays an SEO report. All analysis happens entirely on your device.
 
 ## What the extension collects
