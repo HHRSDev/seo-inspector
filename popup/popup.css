@@ -82,6 +82,25 @@ header h1 {
   white-space: nowrap;
 }
 
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.app-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.version {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .page-url {
   color: var(--text-muted);
   font-size: 11px;

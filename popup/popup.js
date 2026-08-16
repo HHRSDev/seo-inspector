@@ -1145,6 +1145,8 @@ if (IS_SIDEBAR) {
 }
 
 (async () => {
+  const version = chrome.runtime?.getManifest?.().version;
+  if (version) document.getElementById("version").textContent = `v${version}`;
   await loadCollapsedSections();
   setupModeSwitch();
   analyze();
