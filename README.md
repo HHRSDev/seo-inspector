@@ -2,6 +2,8 @@
 
 A Chrome/Edge browser extension that inspects the current page and reports on its SEO elements in a clean popup interface.
 
+**Install it from the [Microsoft Edge Add-ons store](https://microsoftedge.microsoft.com/addons/detail/seo-inspector/jnccodmlfhadmckeoamblfhiophcgbkf)** (Chrome Web Store listing pending review).
+
 ## What it checks
 
 - **Title & Description** — presence, duplicates, and character-length guidance (title 30–60, description 70–160)
